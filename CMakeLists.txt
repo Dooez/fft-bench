@@ -25,16 +25,22 @@ set(KFR_ARCH avx512)
 set(KFR_ENABLE_MULTIARCH OFF)
 FetchContent_MakeAvailable(kfr)
 
+FetchContent_Declare(
+  glaze
+  GIT_REPOSITORY https://github.com/stephenberry/glaze.git
+  GIT_TAG main
+  GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(glaze)
 
 add_executable(bench
-    src/pcx.cpp
-    src/kfr.cpp
-    src/fftw3.cpp
     src/run.cpp
 )
 target_include_directories(bench PUBLIC include)
 target_link_libraries(bench
-    pcx::pcx
+    PRIVATE
+    pcx::fft
+    glaze::glaze
     kfr
     kfr_dft
     PkgConfig::FFTW
